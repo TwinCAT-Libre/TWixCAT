@@ -1,0 +1,1 @@
+$dte = new-object -com VisualStudio.DTE.16.0
