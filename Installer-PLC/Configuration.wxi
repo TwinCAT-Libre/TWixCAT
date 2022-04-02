@@ -4,7 +4,7 @@
 	<?define ProductName = "Company PLC" ?>
 	<?define ProductManufacturer = "Company" ?>
 	<?define ProductVersion = "0.0.0.1" ?>
-	<?define ProductUpgradeCode = "YOUR-GUID" ?>
+	<?define ProductUpgradeCode = "2c0fabba-7ccc-4499-915d-8b782242fcbb" ?>
 
 	<?define PackageDescription = "Company PLC" ?>
 

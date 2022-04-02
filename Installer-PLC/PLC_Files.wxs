@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <Fragment>
+        <DirectoryRef Id="PLCBOOTDIR">
+            <Component Id="cmpAB23CB30D7237446EBB78D262645F42E" Guid="*">
+                <File Id="fil3C05AE1A891065EF392D85DB6A734A3F" KeyPath="yes" Source="$(var.HarvestPath)\CurrentConfig.tszip" />
+            </Component>
+            <Component Id="cmpD4F75295D558AD614619B025372FE8DB" Guid="*">
+                <File Id="fil4A6FD80F94AFDCB381669FE4A71EA0E7" KeyPath="yes" Source="$(var.HarvestPath)\CurrentConfig.xml" />
+            </Component>
+            <Directory Id="dirCA955EBA27666DB3052F43B09F73173A" Name="CurrentConfig">
+                <Component Id="cmp78604086578398EB49F1A7A9E5C16C4C" Guid="*">
+                    <File Id="filD54490BC4429865D9CD0F52A68ACC684" KeyPath="yes" Source="$(var.HarvestPath)\CurrentConfig\PLC01.tpzip" />
+                </Component>
+            </Directory>
+            <Directory Id="dir4B782E855EB22CD059B01C1DAE33FF60" Name="Plc">
+                <Component Id="cmp764A136B4A86B892896C4DE6DF57F41B" Guid="*">
+                    <File Id="fil86D4CF4919441E933F4477B742D2430A" KeyPath="yes" Source="$(var.HarvestPath)\Plc\Port_851.app" />
+                </Component>
+                <Component Id="cmp932E9A7A3370E39D5700098FD10A149A" Guid="*">
+                    <File Id="filF9D173CF46CE5B5B95DC77238EEB403A" KeyPath="yes" Source="$(var.HarvestPath)\Plc\Port_851.autostart" />
+                </Component>
+                <Component Id="cmp686216956D38C0F5401D30E837F2CDBC" Guid="*">
+                    <File Id="filF43B9BFCCBDC34F0A8D7AF15C6D9A5D7" KeyPath="yes" Source="$(var.HarvestPath)\Plc\Port_851.cid" />
+                </Component>
+                <Component Id="cmpC3E71D9C71F00250A5FCA9B07B8426EF" Guid="*">
+                    <File Id="fil6949304EABBD2B6AA335EFD7E6F040A7" KeyPath="yes" Source="$(var.HarvestPath)\Plc\Port_851.crc" />
+                </Component>
+                <Component Id="cmp21768EE4E56B5F86DBC77EB7ABA83912" Guid="*">
+                    <File Id="fil30A651E8F832663DB8AE5BBCE026AC68" KeyPath="yes" Source="$(var.HarvestPath)\Plc\Port_851.occ" />
+                </Component>
+                <Component Id="cmp9DF090C9D3A1BF39AC47B130663D2A6E" Guid="*">
+                    <File Id="filA3D9AD2CF6E9A4DE86354633154DDF9E" KeyPath="yes" Source="$(var.HarvestPath)\Plc\Port_851.oce" />
+                </Component>
+                <Component Id="cmp3CD7B994BB5D0BC4D38B0828A47E3427" Guid="*">
+                    <File Id="fil8732032DE5D9B2F25E304BBA716BAE0F" KeyPath="yes" Source="$(var.HarvestPath)\Plc\Port_851.ocm" />
+                </Component>
+                <Component Id="cmpF4A040B3D491E8D4EAC3D273DA7CDCA6" Guid="*">
+                    <File Id="fil4CE911E8F62971E214FB2E7ADC45A00A" KeyPath="yes" Source="$(var.HarvestPath)\Plc\Port_851_boot.tizip" />
+                </Component>
+            </Directory>
+        </DirectoryRef>
+    </Fragment>
+    <Fragment>
+        <ComponentGroup Id="HeatGenerated">
+            <ComponentRef Id="cmpAB23CB30D7237446EBB78D262645F42E" />
+            <ComponentRef Id="cmpD4F75295D558AD614619B025372FE8DB" />
+            <ComponentRef Id="cmp78604086578398EB49F1A7A9E5C16C4C" />
+            <ComponentRef Id="cmp764A136B4A86B892896C4DE6DF57F41B" />
+            <ComponentRef Id="cmp932E9A7A3370E39D5700098FD10A149A" />
+            <ComponentRef Id="cmp686216956D38C0F5401D30E837F2CDBC" />
+            <ComponentRef Id="cmpC3E71D9C71F00250A5FCA9B07B8426EF" />
+            <ComponentRef Id="cmp21768EE4E56B5F86DBC77EB7ABA83912" />
+            <ComponentRef Id="cmp9DF090C9D3A1BF39AC47B130663D2A6E" />
+            <ComponentRef Id="cmp3CD7B994BB5D0BC4D38B0828A47E3427" />
+            <ComponentRef Id="cmpF4A040B3D491E8D4EAC3D273DA7CDCA6" />
+        </ComponentGroup>
+    </Fragment>
+</Wix>

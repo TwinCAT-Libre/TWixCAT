@@ -6,7 +6,7 @@
     <ProductVersion>3.10</ProductVersion>
     <ProjectGuid>178e507c-c67f-4377-ba6e-86322c4c88db</ProjectGuid>
     <SchemaVersion>2.0</SchemaVersion>
-    <OutputName>SystemPLCInstaller</OutputName>
+    <OutputName>PLCInstaller</OutputName>
     <OutputType>Package</OutputType>
     <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
   </PropertyGroup>
@@ -20,15 +20,13 @@
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="PLC_Files.wxs" />
     <Compile Include="UI.wxs" />
     <Compile Include="Product.wxs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Configuration.wxi" />
-    <Content Include="UIRef\CompanyBanner.bmp" />
-    <Content Include="UIRef\CompanyDialog.bmp" />
-    <Content Include="UIRef\CompanyLogo.ico" />
-    <Content Include="UIRef\license.rtf" />
+    <Content Include="HeatExclude.xslt" />
   </ItemGroup>
   <ItemGroup>
     <WixExtension Include="WixUIExtension">
@@ -37,7 +35,7 @@
     </WixExtension>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="UIRef" />
+    <Folder Include="resources" />
   </ItemGroup>
   <Import Project="$(WixTargetsPath)" Condition=" '$(WixTargetsPath)' != '' " />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets" Condition=" '$(WixTargetsPath)' == '' AND Exists('$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets') " />
@@ -52,4 +50,13 @@
 	<Target Name="AfterBuild">
 	</Target>
 	-->
+  <PropertyGroup>
+    <DefineConstants>HarvestPath=..\PLC-Wix\_Boot\TwinCAT RT (x64)\</DefineConstants>
+  </PropertyGroup>
+  <Target Name="BeforeBuild">
+    <HeatDirectory Directory="..\PLC-Wix\_Boot\TwinCAT RT (x64)\" OutputFile="PLC_Files.wxs" ComponentGroupName="HeatGenerated" DirectoryRefId="PLCBOOTDIR" AutogenerateGuids="true" ToolPath="$(WixToolPath)" SuppressFragments="true" SuppressRegistry="true" SuppressRootDirectory="true" PreprocessorVariable="var.HarvestPath" Transforms="HeatExclude.xslt" />
+  </Target>
+  <PropertyGroup>
+    <PreBuildEvent />
+  </PropertyGroup>
 </Project>
