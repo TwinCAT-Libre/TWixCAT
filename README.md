@@ -12,7 +12,11 @@ Simply put, it makes all those fancy installers you've used when you had to inst
 ## Setup
 
 ### Requirements
-This assumes you have some familiarity with TwinCAT project file structures and have performed updates (for TE2000 and PLC) in the traditional way.  
+* Familiarity with TwinCAT project file structures and have performed updates (for TE2000 and PLC) in the traditional way
+* Your PLC project is configured for [file level updates](https://infosys.beckhoff.com/english.php?content=../content/1033/machineupdate/6137492619.html&id=6453043249580970735). (Not entirely neccesary, but will reduce headaches)
+* The project does not use C++
+* The destination system is 64 bit Windows
+  * 32 bit is untested at this time
 
 ### Installation and Usage
 This assumes you have TwinCAT3 and a version of Visual Studio already installed.
@@ -22,7 +26,7 @@ This assumes you have TwinCAT3 and a version of Visual Studio already installed.
 1. Copy the folder for the installer from this repo into your solution folder and add it to existing -or-
 1. In an existing or new solution add a new project using the `Setup Project for Wix v3` template and manually change/create the required wix files
 2. Modify the entries in the `Configuration.wxi`. 
-3. Plase any relevant image files in the UI folder
+3. Plase any relevant image files and licesnes in the `resources` folder of the Wix project to be displayed during the install process
 4. Change the Harvestpath in the `.wixproj` file to match your solution name
 > You will have to modify the HarvestPath and replace PLC-Wix with your TwinCAT Solution folder name
 > ```<HeatDirectory Directory="..\```**PLC-Wix**```\_Boot\TwinCAT RT (x64)\....."```
@@ -50,10 +54,17 @@ A generated list of files that are compiled into the windows installer for trans
 ## Q&A
 
 ### How does heat auto generate the file list?
-Pure magic! No, in Visual Studio you cant see where any of this information is set. You have to open the `.wixproj` file in a text editor to see where this is configured. Check out the last lines of the Installer-HMI.wixproj to see where and how files are harvested. 
+Pure magic! No, in Visual Studio you cant see where any of this information is set. You have to open the `.wixproj` file in a text editor to see where this is configured. Check out the last lines of the `Installer-HMI/PLC.wixproj` to see where and how files are harvested. 
 
 
-
+## Future Things
+* Get version out of the GVLs into the wxi so it only has to be set in one place
+* Trigger PLC project build automatically when building installer
+  * Likely using powershell scripts? c#?
+* Do backups without powershell?
+* Selectable installation options
+  * backup, autostart registry
+* 32 bit compliation differences
 
 
 
