@@ -1,0 +1,11 @@
+*.msi
+*.wixpdb
+*.wixobj
+*.Bind*.txt
+*.FileList.txt
+*.suo
+*.compileinfo
+*.bak
+Port_851*
+*.compiled-library
+*.~u
