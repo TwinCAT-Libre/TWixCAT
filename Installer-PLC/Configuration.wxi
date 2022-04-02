@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+	<!-- Setup Configuration -->
+	<?define ProductName = "Company PLC" ?>
+	<?define ProductManufacturer = "Company" ?>
+	<?define ProductVersion = "0.0.0.1" ?>
+	<?define ProductUpgradeCode = "YOUR-GUID" ?>
+
+	<?define PackageDescription = "Company PLC" ?>
+
+</Include>

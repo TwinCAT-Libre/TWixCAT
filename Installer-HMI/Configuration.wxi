@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+	<!-- Setup Configuration -->
+	<?define ProductName = "Company HMI" ?>
+	<?define ProductManufacturer = "Company" ?>
+	<?define ProductVersion = "0.0.0.1" ?> <!--Dont forget to change the version in the HMI project to match!-->
+	<?define ProductUpgradeCode = "YOUR-GUID" ?>
+
+	<?define PackageDescription = "Company HMI" ?>
+
+	
+</Include>

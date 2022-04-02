@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
+	 xmlns:fg="http://www.firegiant.com/schemas/v3/wxs/fgwep.xsd">
+	<?include Configuration.wxi ?>
+	<Product Id="*"
+				 Name="$(var.ProductName)"
+				 Language="1033"
+				 Version="$(var.ProductVersion)"
+				 Manufacturer="$(var.ProductManufacturer)"
+				 UpgradeCode="$(var.ProductUpgradeCode)">
+		
+		<Package Id ="*"
+				 InstallerVersion="200"
+				 InstallPrivileges="elevated"
+				 Compressed="yes"
+				 InstallScope="perMachine"
+				 Description="$(var.PackageDescription)"
+				 Manufacturer="$(var.ProductManufacturer)"
+				 Keywords="HMI"
+				 Comments="Company"
+				 />
+
+
+		<!-- Set the icon to be used in "Programs and Features" (aka "Add/Remove Programs") -->
+		<Icon Id="AppIcon" SourceFile="UIRef/CompanyLogo.ico" />
+		<Property Id="ARPPRODUCTICON"   Value="AppIcon" />
+
+		<!-- set custom graphics and license -->
+		<WixVariable Id="WixUILicenseRtf" Value="license.rtf" />
+		<WixVariable Id="WixUIBannerBmp" Value="UIRef\CompanyBanner.bmp" />
+		<WixVariable Id="WixUIDialogBmp" Value="UIRef\CompanyDialog.bmp" />
+
+		<!-- Suppress the ability to run the Repair option in programs/features -->
+		<Property Id="ARPNOREPAIR" Value="yes" Secure="yes" />
+
+		<!-- Show the file in use dialog since the HMI is now a service -->
+		<Property Id="MSIRESTARTMANAGERCONTROL" Value="Enable"/>
+
+
+
+		<Upgrade Id="$(var.ProductUpgradeCode)">
+			<!-- Must match Upgrade code otherwise same version can be installed with diff product ID-->
+			<UpgradeVersion OnlyDetect="no"
+							Property="SELFFOUND"
+							Minimum="0.1"
+							/>
+		</Upgrade>
+
+
+		<MediaTemplate EmbedCab="yes" />
+
+		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+
+
+		<!--See the raw .wixproj file to see how Heat is called during this build project-->
+		<Feature Id="Default" Title="HMI Source Files" Level="1">
+			<ComponentGroupRef Id="HeatGenerated" />
+		</Feature>
+
+		
+		<Directory Id="TARGETDIR" Name="SourceDir">
+			<Directory Id="ProgramFilesFolder">
+				<Directory Id="INSTALLFOLDER" Name="Company PLC" />
+				<Directory Id="HMIDIR" />
+			</Directory>
+		</Directory>
+
+		<SetDirectory Id="HMIDIR" Value="C:\ProgramData\Beckhoff\TF2000 TwinCAT 3 HMI Server" />
+
+
+		<UI>
+			<!-- Custom UI to hide the EULA -->
+			<UIRef Id="CompanyWixUI_Minimal"></UIRef>
+		</UI>
+
+		<!--Specify when actions occur actions during install-->
+		<InstallExecuteSequence>
+			<Custom Action="StopHmiServer" After ="CostFinalize">NOT Installed AND NOT PATCH</Custom>
+			<Custom Action="StartHmiServer" After ="InstallFinalize">NOT Installed AND NOT PATCH</Custom>
+		</InstallExecuteSequence>
+		
+	</Product>
+
+	<Fragment>
+		<!-- Launches Powershell and archives the HMI boot directory before install, if it exists. ONLY SUPPORTED ON POWERSHELL v5+ -->
+		<!-- Request too long to happen, obsoleting for now -->
+		<!-- Encoded powershell command is equal to  'Compress-Archive ''C:\ProgramData\Beckhoff\TF2000 TwinCAT 3 HMI Server\'' ' + 'C:\TwinCAT\3.1\"HMI Backup "$((Get-Date).tostring("yyyy-MM-dd-HHmmss"))'-->
+		<!--Future use
+		<CustomAction Id = "ARCHIVEHMIDIR"
+					  Directory = "TARGETDIR"
+					  ExeCommand = "powershell.exe -windowstyle hidden -encodedCommand QwBvAG0AcAByAGUAcwBzAC0AQQByAGMAaABpAHYAZQAgACcAQwA6AFwAUAByAG8AZwByAGEAbQBEAGEAdABhAFwAQgBlAGMAawBoAG8AZgBmAFwAVABGADIAMAAwADAAIABUAHcAaQBuAEMAQQBUACAAMwAgAEgATQBJACAAUwBlAHIAdgBlAHIAXAAnACAAQwA6AFwAVAB3AGkAbgBDAEEAVABcADMALgAxAFwAIgBIAE0ASQAgAEIAYQBjAGsAdQBwACAAIgAkACgAKABHAGUAdAAtAEQAYQB0AGUAKQAuAHQAbwBzAHQAcgBpAG4AZwAoACIAeQB5AHkAeQAtAE0ATQAtAGQAZAAtAEgASABtAG0AcwBzACIAKQApAA=="
+					  Return="ignore"
+					  />
+		-->
+	</Fragment>
+
+
+	<Fragment>
+		<!--Control the HMI service-->
+		<CustomAction Id="StopHmiServer" Directory="TARGETDIR" Return="ignore" ExeCommand="powershell.exe -windowstyle hidden Stop-Service -name 'TcHmiSrv'"/>
+		<CustomAction Id="StartHmiServer" Directory="TARGETDIR" Return="ignore" ExeCommand="powershell.exe -windowstyle hidden Start-Service -name 'TcHmiSrv'"/>
+	</Fragment>
+	
+</Wix>

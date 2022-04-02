@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<?include Configuration.wxi ?>
+	<Product Id="*" 
+				 Name="$(var.ProductName)"
+				 Language="1033"
+				 Version="$(var.ProductVersion)"
+				 Manufacturer="$(var.ProductManufacturer)"
+				 UpgradeCode="$(var.ProductUpgradeCode)">
+
+		<Package Id ="*"
+				 InstallerVersion="200"
+				 InstallPrivileges="elevated"
+				 Compressed="yes"
+				 InstallScope="perMachine"
+				 Description="$(var.PackageDescription)"
+				 Manufacturer="$(var.ProductManufacturer)"
+				 Keywords="PLC"
+				 Comments="Company "
+				 />
+
+
+		<!-- Set the icon to be used in "Programs and Features" (aka "Add/Remove Programs") -->
+		<Icon Id="AppIcon" SourceFile="UIRef/CompanyLogo.ico" />
+		<Property Id="ARPPRODUCTICON"   Value="AppIcon" />
+		
+		<!-- set custom graphics and license -->
+		<WixVariable Id="WixUILicenseRtf" Value="license.rtf" />
+		<WixVariable Id="WixUIBannerBmp" Value="UIRef\CompanyBanner.bmp" />
+		<WixVariable Id="WixUIDialogBmp" Value="UIRef\CompanyDialog.bmp" />
+		
+		
+		<!-- Suppress the ability to run the Repair option in programs/features -->
+		<Property Id="ARPNOREPAIR" Value="yes" Secure="yes" />
+
+		<Upgrade Id="$(var.ProductUpgradeCode)"> <!-- Must match Upgrade code otherwise same version can be installed with diff product ID-->
+			<UpgradeVersion OnlyDetect="no"
+							Property="SELFFOUND"
+							Minimum="0.1"
+							/>
+		</Upgrade>
+
+
+		<MediaTemplate EmbedCab="yes" />
+		
+		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+
+
+
+		<Feature Id="Default_x64" Title="PLC Code x64" Level="1">
+			<Condition Level ="1">
+				<![CDATA[(VersionNT64)]]>
+			</Condition>
+			<ComponentGroupRef Id="ProductComponentsx64" />
+		</Feature>
+
+
+		<Directory Id="TARGETDIR" Name="SourceDir">
+			<Directory Id="ProgramFilesFolder">
+				<Directory Id="INSTALLFOLDER" Name="Company PLC" />
+				<Directory Id="PLCBOOTDIR" />
+				<Directory Id="PLCDIR" />
+			</Directory>
+
+		</Directory>
+
+		<SetDirectory Id="PLCBOOTDIR" Value="C:\TwinCAT\3.1\Boot" />
+		<SetDirectory Id="PLCDIR" Value="C:\TwinCAT\3.1\Boot\Plc" />
+
+		<UI>
+			<!-- Custom UI to hide the EULA -->
+			<UIRef Id="CompanyWixUI_Minimal"></UIRef>
+		</UI>
+
+		<!--Specify when actions occur actions during install-->
+		<InstallExecuteSequence>
+			<Custom Action="ARCHIVEBOOTDIR" After ="CostFinalize">NOT Installed AND NOT PATCH</Custom>
+			<!--ToDo: copy files n stuff-->
+		</InstallExecuteSequence>
+		
+	</Product>
+
+	<Fragment>
+		<!-- Launches Powershell and archives the PLC boot directory before install, if it exists. ONLY SUPPORTED ON POWERSHELL v5+ -->
+		<!-- Encoded powershell command is eual to  Compress-Archive C:\TwinCAT\3.1\Boot\  C:\TwinCAT\3.1\"PLC Backup "$((Get-Date).tostring("yyyy-MM-dd-HHmmss")) -->
+		<CustomAction Id = "ARCHIVEBOOTDIR"
+					  Directory = "TARGETDIR"
+					  ExeCommand = "powershell.exe -windowstyle hidden -encodedCommand QwBvAG0AcAByAGUAcwBzAC0AQQByAGMAaABpAHYAZQAgAEMAOgBcAFQAdwBpAG4AQwBBAFQAXAAzAC4AMQBcAEIAbwBvAHQAXAAgACAAQwA6AFwAVAB3AGkAbgBDAEEAVABcADMALgAxAFwAIgBQAEwAQwAgAEIAYQBjAGsAdQBwACAAIgAkACgAKABHAGUAdAAtAEQAYQB0AGUAKQAuAHQAbwBzAHQAcgBpAG4AZwAoACIAeQB5AHkAeQAtAE0ATQAtAGQAZAAtAEgASABtAG0AcwBzACIAKQApAA== "
+					  Return="ignore"
+					  />
+	</Fragment>
+
+
+
+	<Fragment>
+		<!--64 bit systems: Place files in appropriate directories and modify registry key for TwinCAT to autostart -->
+		<ComponentGroup Id="ProductComponentsx64">
+			<Component Id="BootComponentsx64" Guid="" Directory="PLCBOOTDIR">
+				<Condition>
+					<![CDATA[(VersionNT64)]]>
+				</Condition>
+				<File Id="CurrentConfig.xml.x64" Source="..\..\PLC\_Boot\TwinCAT RT (x64)\CurrentConfig.xml" KeyPath="no" />
+				<RemoveFile Id="CurrentConfig.xml.x64" Name="CurrentConfig.xml" On="install"/>
+				<File Id="CurrentEventMessages.xml.x64" Source="..\..\PLC\_Boot\TwinCAT RT (x64)\CurrentEventMessages.xml" KeyPath="no" />
+				<RemoveFile Id="CurrentEventMessages.xml.x64" Name="CurrentEventMessages.xml" On="install"/>
+			</Component>
+			
+			<Component Id="PLCComponent.x64" Guid="" Directory="PLCDIR">
+				<Condition>
+					<![CDATA[(VersionNT64)]]>
+				</Condition>
+				<File Id="Port_851.app.x64" Source="..\..\PLC\_Boot\TwinCAT RT (x64)\Plc\Port_851.app" KeyPath="no" />
+				<RemoveFile Id="RemPort_851.app" Name="Port_851.app" On="install"/>
+				<File Id="Port_851.autostart.x64" Source="..\..\PLC\_Boot\TwinCAT RT (x64)\Plc\Port_851.autostart" KeyPath="no" />
+				<RemoveFile Id="RemPort_851.autostart" Name="Port_851.autostart" On="install"/>
+				<File Id="Port_851.cid.x64" Source="..\..\PLC\_Boot\TwinCAT RT (x64)\Plc\Port_851.cid" KeyPath="no" />
+				<RemoveFile Id="RemPort_851.cid" Name="Port_851.cid" On="install"/>
+				<File Id="Port_851.crc.x64" Source="..\..\PLC\_Boot\TwinCAT RT (x64)\Plc\Port_851.crc" KeyPath="no" />
+				<RemoveFile Id="RemPort_851.crc" Name="Port_851.crc" On="install"/>
+				<File Id="Port_851.occ.x64" Source="..\..\PLC\_Boot\TwinCAT RT (x64)\Plc\Port_851.occ" KeyPath="no" />
+				<RemoveFile Id="RemPort_851.occ" Name="Port_851.occ" On="install"/>
+				<File Id="Port_851.ocm.x64" Source="..\..\PLC\_Boot\TwinCAT RT (x64)\Plc\Port_851.ocm" KeyPath="no" />
+				<RemoveFile Id="RemPort_851.ocm" Name="Port_851.ocm" On="install"/>
+				<File Id="Port_851_boot.tizip.x64" Source="..\..\PLC\_Boot\TwinCAT RT (x64)\Plc\Port_851_boot.tizip" KeyPath="no" />
+				<RemoveFile Id="RemPort_851_boot.tizip" Name="Port_851_boot.tizip" On="install"/>
+			</Component>
+			
+			<Component Id="StartupReg.x64" Guid="" Directory="TARGETDIR">
+				<Condition>
+					<![CDATA[(VersionNT64)]]>
+				</Condition>
+				<RegistryKey Root="HKLM"
+							 Key="Software\WOW6432Node\Beckhoff\TwinCAT3\System">
+					<RegistryValue Name="SysStartupState"
+								   Type="integer"
+								   Value ="5"/>
+				</RegistryKey>
+			</Component>
+		</ComponentGroup>
+	</Fragment>
+</Wix>
