@@ -52,9 +52,10 @@
 	-->
   <PropertyGroup>
     <DefineConstants>HarvestPath=..\PLC-Wix\_Boot\TwinCAT RT (x64)\</DefineConstants>
+	<DefineConstants>ProjectName=PLC-Wix</DefineConstants>
   </PropertyGroup>
   <Target Name="BeforeBuild">
-    <HeatDirectory Directory="..\PLC-Wix\_Boot\TwinCAT RT (x64)\" OutputFile="PLC_Files.wxs" ComponentGroupName="HeatGenerated" DirectoryRefId="PLCBOOTDIR" AutogenerateGuids="true" ToolPath="$(WixToolPath)" SuppressFragments="true" SuppressRegistry="true" SuppressRootDirectory="true" PreprocessorVariable="var.HarvestPath" Transforms="HeatExclude.xslt" />
+    <HeatDirectory Directory="..\PLC-WiX\_Boot\TwinCAT RT (x64)\" OutputFile="PLC_Files.wxs" ComponentGroupName="HeatGenerated" DirectoryRefId="PLCBOOTDIR" AutogenerateGuids="true" ToolPath="$(WixToolPath)" SuppressFragments="true" SuppressRegistry="true" SuppressRootDirectory="true" PreprocessorVariable="var.HarvestPath" Transforms="HeatExclude.xslt" />
   </Target>
   <PropertyGroup>
     <PreBuildEvent />
