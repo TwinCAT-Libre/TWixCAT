@@ -17,6 +17,7 @@ Simply put, it makes all those fancy installers you've used when you had to inst
 * The project does not use C++
 * The destination system is 64 bit Windows
   * 32 bit is untested at this time
+* TF2000 should be installed locally on your development machine
 
 ### Installation and Usage
 This assumes you have TwinCAT3 and a version of Visual Studio already installed.
